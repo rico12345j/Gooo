@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TERMINAL // 7707 // ROOT</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #000;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        .terminal-header {
+            border-bottom: 1px solid #00ffcc44;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: #00ffcc88;
+        }
+        .terminal-body {
+            flex: 1;
+            background: #000000aa;
+            border: 1px solid #00ffcc33;
+            padding: 20px;
+            overflow-y: auto;
+            max-height: 80vh;
+            line-height: 1.8;
+            font-size: 14px;
+            box-shadow: inset 0 0 60px #00ffcc08;
+        }
+        .terminal-body .prompt { color: #ffaa33; }
+        .terminal-body .output { color: #88ffdd; }
+        .terminal-body .error { color: #ff3366; }
+        .terminal-body .success { color: #66ff99; }
+        .terminal-body .highlight { color: #ffaa33; }
+        .terminal-body .blink { animation: blink 0.8s infinite; }
+        @keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0;} }
+        .input-line {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+        }
+        .input-line .prompt { color: #ffaa33; font-weight: bold; }
+        #cmdInput {
+            background: transparent;
+            border: none;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            outline: none;
+            flex: 1;
+            caret-color: #00ffcc;
+        }
+        .input-line .cursor { animation: blink 0.8s infinite; }
+        ::-webkit-scrollbar { width: 6px; background: #000; }
+        ::-webkit-scrollbar-thumb { background: #00ffcc44; border-radius: 10px; }
+        .footer-status {
+            margin-top: 10px;
+            font-size: 12px;
+            color: #00ffcc55;
+            border-top: 1px solid #00ffcc22;
+            padding-top: 10px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="terminal-header">
+        <span>🔴 TERMINAL // root@success</span>
+        <span>7707 // VISUAL-NINE</span>
+        <span>🕒 <span id="clockTerm">00:00:00</span> UTC</span>
+    </div>
+
+    <div class="terminal-body" id="termOutput">
+        <div><span class="prompt">root@success:~$</span> <span class="output">systemctl start LØGHØST-Z</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="success">✓ Core initialized</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">scan --target 19.2.2.2 --ports all</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">22/tcp open  ssh</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">80/tcp open  http</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">81/tcp open  hosts2.axs</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="success">✓ Scan complete</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">ssh 10.2.2.2 -l root</span></div>
+        <div><span class="prompt">root@10.2.2.2:~$</span> <span class="success">Access granted (level 9)</span></div>
+        <div><span class="prompt">root@10.2.2.2:~$</span> <span class="output">RHF CIHIRDL> disable grid nodes 21-48</span></div>
+        <div><span class="prompt">root@10.2.2.2:~$</span> <span class="error">⚠️ Partial failure (nodes 34, 47)</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">crypto --key (a#3#5#w#0#2) --decrypt</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="success">✓ 7707 signature matched</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="output">funds --transfer $12.4M --offshore 17</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="success">✓ Transfer complete</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="highlight">All barriers removed. 100% freedom.</span></div>
+        <div><span class="prompt">root@success:~$</span> <span class="blink">█</span></div>
+    </div>
+
+    <div class="input-line">
+        <span class="prompt">root@success:~$</span>
+        <input type="text" id="cmdInput" placeholder="اكتب الأمر هنا..." autofocus>
+        <span class="cursor">█</span>
+    </div>
+
+    <div class="footer-status">
+        <span>PID: 7707</span>
+        <span>UPTIME: <span id="uptimeTerm">00:00:00</span></span>
+        <span>CONNECTION: SECURE</span>
+    </div>
+
+    <script>
+        // ============================================================
+        //  TERMINAL ENGINE – محاكاة أوامر حية
+        // ============================================================
+        const termOutput = document.getElementById('termOutput');
+        const cmdInput = document.getElementById('cmdInput');
+        const clockTerm = document.getElementById('clockTerm');
+        const uptimeTerm = document.getElementById('uptimeTerm');
+
+        // قاعدة بيانات الأوامر
+        const commands = {
+            'help': 'الأوامر المتاحة: help, scan, ssh, crypto, funds, grid, clear, whoami, exit, status, 7707',
+            'scan': '🔍 Scanning 19.2.2.2...\n22/tcp open ssh\n80/tcp open http\n81/tcp open hosts2.axs\n✅ Scan complete.',
+            'ssh': '🔐 Connecting to 10.2.2.2...\n✅ Access granted (level 9)\nRHF CIHIRDL> disable grid nodes 21-48\n⚠️ Partial failure.',
+            'crypto': '🔑 Key (a#3#5#w#0#2) matched.\n✅ 7707 signature verified.\n🔓 Decryption successful.',
+            'funds': '💰 Transferring $12.4M to offshore account #17...\n✅ Transfer complete. Balance: $198.6M (+27.8%)',
+            'grid': '⚡ CityPower Grid Status:\nNodes active: 47/128\nDisabled: 21-48 (partial)\nLoad: 78%',
+            'clear': 'CLEAR',
+            'whoami': '👤 root@success // unrestricted // LØGHØST-Z core',
+            'exit': '👋 Terminating session...\n🔴 Connection closed.',
+            'status': '🟢 SYSTEM: BREACHED\n🔐 CRYPTO: ENCRYPTED\n💰 ASSETS: $198.6M\n⚡ GRID: 78%',
+            '7707': '🔥 7707 // VISUAL-NINE // V9 // THE SIGNATURE OF THE VOID'
+        };
+
+        // إضافة سطر إلى الطرفية
+        function addTermLine(text, className = 'output') {
+            const div = document.createElement('div');
+            div.innerHTML = `<span class="prompt">root@success:~$</span> <span class="${className}">${text}</span>`;
+            termOutput.appendChild(div);
+            termOutput.scrollTop = termOutput.scrollHeight;
+        }
+
+        // معالجة الأمر
+        function processCommand(cmd) {
+            const trimmed = cmd.trim().toLowerCase();
+            if (trimmed === '') return;
+
+            // إظهار الأمر المكتوب
+            const inputDiv = document.createElement('div');
+            inputDiv.innerHTML = `<span class="prompt">root@success:~$</span> <span class="output">${cmd}</span>`;
+            termOutput.appendChild(inputDiv);
+
+            // معالجة الأوامر
+            if (trimmed === 'clear') {
+                termOutput.innerHTML = '';
+                return;
+            }
+
+            if (commands[trimmed]) {
+                const output = commands[trimmed];
+                const lines = output.split('\n');
+                lines.forEach(line => {
+                    const cls = line.includes('✅') || line.includes('✓') ? 'success' :
+                               line.includes('⚠️') || line.includes('❌') ? 'error' :
+                               line.includes('🔍') || line.includes('🔐') || line.includes('💰') ? 'highlight' : 'output';
+                    const div = document.createElement('div');
+                    div.innerHTML = `<span class="prompt">root@success:~$</span> <span class="${cls}">${line}</span>`;
+                    termOutput.appendChild(div);
+                });
+            } else {
+                const div = document.createElement('div');
+                div.innerHTML = `<span class="prompt">root@success:~$</span> <span class="error">❌ Unknown command: ${cmd}</span>`;
+                termOutput.appendChild(div);
+            }
+
+            termOutput.scrollTop = termOutput.scrollHeight;
+            cmdInput.value = '';
+        }
+
+        // إرسال الأمر عند الضغط على Enter
+        cmdInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                processCommand(cmdInput.value);
+            }
+        });
+
+        // الحفاظ على التركيز
+        document.addEventListener('click', () => cmdInput.focus());
+
+        // الساعة
+        function updateClockTerm() {
+            const now = new Date();
+            clockTerm.textContent = now.toUTCString().split(' ')[4];
+        }
+        setInterval(updateClockTerm, 1000);
+        updateClockTerm();
+
+        // وقت التشغيل
+        let start = Date.now();
+        function updateUptimeTerm() {
+            const elapsed = Math.floor((Date.now() - start) / 1000);
+            const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+            const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+            const s = String(elapsed % 60).padStart(2, '0');
+            uptimeTerm.textContent = `${h}:${m}:${s}`;
+        }
+        setInterval(updateUptimeTerm, 1000);
+        updateUptimeTerm();
+
+        // أمر ترحيبي تلقائي بعد 2 ثانية
+        setTimeout(() => {
+            addTermLine('🔥 LØGHØST-Z core ready. Type "help" for commands.', 'highlight');
+        }, 500);
+    </script>
+
+</body>
+</html>

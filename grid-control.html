@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GRID CONTROL // CITYPOWER // 7707</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .grid-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #00ffcc44;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .grid-header h1 { font-size: 20px; color: #ff3366; letter-spacing: 4px; }
+        .grid-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 700px) { .grid-container { grid-template-columns: 1fr; } }
+        .panel {
+            background: #000000aa;
+            border: 1px solid #00ffcc33;
+            padding: 18px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #00ffcc33;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            color: #00ffcc;
+        }
+        .grid-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #00ffcc11;
+        }
+        .grid-row .label { color: #88ffdd99; }
+        .grid-row .value { color: #66ff99; }
+        .grid-row .value.warning { color: #ffaa33; }
+        .grid-row .value.danger { color: #ff3366; }
+        .node-grid {
+            display: grid;
+            grid-template-columns: repeat(8, 1fr);
+            gap: 6px;
+            margin-top: 10px;
+        }
+        .node {
+            background: #001111;
+            border: 1px solid #00ffcc22;
+            border-radius: 4px;
+            text-align: center;
+            padding: 6px 0;
+            font-size: 10px;
+            transition: 0.3s;
+        }
+        .node.active { border-color: #66ff99; background: #003333; }
+        .node.disabled { border-color: #ff3366; background: #330000; color: #ff336688; }
+        .node:hover { transform: scale(1.1); }
+        .status-bar-grid {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #00ffcc22;
+            font-size: 12px;
+            color: #00ffcc66;
+        }
+        .energy-bar-big {
+            width: 100%;
+            height: 14px;
+            background: #002222;
+            border-radius: 10px;
+            margin: 8px 0;
+            overflow: hidden;
+        }
+        .energy-fill-big {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3366, #ffaa00, #66ff99);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="grid-header">
+        <h1>⚡ CITYPOWER GRID CONTROL</h1>
+        <div><span style="color:#ff3366;">🔴 BREACHED</span> // 7707 // VISUAL-NINE</div>
+        <div>🕒 <span id="gridClock">00:00:00</span> UTC</div>
+    </div>
+
+    <div class="grid-container">
+        <!-- اللوحة اليسرى: معلومات الشبكة -->
+        <div class="panel">
+            <div class="panel-title">📊 NETWORK STATUS</div>
+            <div class="grid-row"><span class="label">Status:</span> <span class="value danger">BREACHED</span></div>
+            <div class="grid-row"><span class="label">Nodes Active:</span> <span class="value" id="activeNodes">47</span> / 128</div>
+            <div class="grid-row"><span class="label">Disabled:</span> <span class="value danger">21-48 (partial)</span></div>
+            <div class="grid-row"><span class="label">SSH Access:</span> <span class="value">10.2.2.2 root@210N101</span></div>
+            <div class="grid-row"><span class="label">Exploit:</span> <span class="value">SSHv1 CR3:2 ✅</span></div>
+            <div class="grid-row"><span class="label">Grid Load:</span> <span class="value warning" id="gridLoadVal">78%</span></div>
+            <div class="energy-bar-big"><div class="energy-fill-big" id="gridFill" style="width:78%;"></div></div>
+            <div class="grid-row"><span class="label">Last Command:</span> <span class="value">RHF CIHIRDL> disable grid nodes 21-48</span></div>
+        </div>
+
+        <!-- اللوحة اليمنى: عقد الشبكة -->
+        <div class="panel">
+            <div class="panel-title">🔲 NODE MAP (1-48)</div>
+            <div class="node-grid" id="nodeGrid">
+                <!-- سيتم توليدها بواسطة JavaScript -->
+            </div>
+            <div class="status-bar-grid">
+                <span>🟢 Active: <span id="activeCount">47</span></span>
+                <span>🔴 Disabled: <span id="disabledCount">1</span></span>
+                <span>⚡ Total: 48</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  GRID CONTROL ENGINE
+        // ============================================================
+        const nodeGrid = document.getElementById('nodeGrid');
+        const activeNodes = document.getElementById('activeNodes');
+        const activeCount = document.getElementById('activeCount');
+        const disabledCount = document.getElementById('disabledCount');
+        const gridLoadVal = document.getElementById('gridLoadVal');
+        const gridFill = document.getElementById('gridFill');
+
+        // توليد العقد
+        function generateNodes() {
+            nodeGrid.innerHTML = '';
+            let active = 0;
+            let disabled = 0;
+            for (let i = 1; i <= 48; i++) {
+                const node = document.createElement('div');
+                node.className = 'node';
+                node.textContent = i;
+                // محاكاة: العقد 21-48 معطلة جزئياً (بعضها يعمل)
+                if (i >= 21 && i <= 48) {
+                    if (i === 34 || i === 47) {
+                        node.classList.add('disabled');
+                        disabled++;
+                    } else {
+                        node.classList.add('active');
+                        active++;
+                    }
+                } else {
+                    node.classList.add('active');
+                    active++;
+                }
+                nodeGrid.appendChild(node);
+            }
+            activeNodes.textContent = active;
+            activeCount.textContent = active;
+            disabledCount.textContent = disabled;
+        }
+        generateNodes();
+
+        // تحديث حمل الشبكة عشوائياً
+        function updateGridLoad() {
+            const load = 50 + Math.random() * 45;
+            gridLoadVal.textContent = Math.round(load) + '%';
+            gridFill.style.width = load + '%';
+            if (load > 80) {
+                gridFill.style.background = 'linear-gradient(90deg, #ff3366, #ffaa00)';
+            } else if (load > 60) {
+                gridFill.style.background = 'linear-gradient(90deg, #ffaa00, #66ff99)';
+            } else {
+                gridFill.style.background = 'linear-gradient(90deg, #66ff99, #00ffcc)';
+            }
+        }
+        setInterval(updateGridLoad, 4000);
+        updateGridLoad();
+
+        // الساعة
+        function updateGridClock() {
+            const now = new Date();
+            document.getElementById('gridClock').textContent = now.toUTCString().split(' ')[4];
+        }
+        setInterval(updateGridClock, 1000);
+        updateGridClock();
+
+        // إعادة توليد العقد كل 15 ثانية (تغيير عشوائي)
+        setInterval(() => {
+            generateNodes();
+        }, 15000);
+    </script>
+
+</body>
+</html>

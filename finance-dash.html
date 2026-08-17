@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FINANCE DASH // MONEY CONTROL // 7707</title>
+    <style>
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body {
+            background: #0a0a0a;
+            color: #00ffcc;
+            font-family: 'Courier New', monospace;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .finance-header {
+            display: flex;
+            justify-content: space-between;
+            border-bottom: 1px solid #00ffcc44;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .finance-header h1 { font-size: 20px; color: #66ff99; letter-spacing: 4px; }
+        .finance-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        @media (max-width: 700px) { .finance-container { grid-template-columns: 1fr; } }
+        .panel {
+            background: #000000aa;
+            border: 1px solid #00ffcc33;
+            padding: 18px;
+            border-radius: 8px;
+            backdrop-filter: blur(4px);
+        }
+        .panel-title {
+            font-size: 16px;
+            font-weight: bold;
+            border-bottom: 1px solid #00ffcc33;
+            padding-bottom: 8px;
+            margin-bottom: 12px;
+            color: #ffaa33;
+        }
+        .finance-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 5px 0;
+            font-size: 13px;
+            border-bottom: 1px solid #00ffcc11;
+        }
+        .finance-row .label { color: #88ffdd99; }
+        .finance-row .value { color: #66ff99; }
+        .finance-row .value.positive { color: #66ff99; }
+        .finance-row .value.negative { color: #ff3366; }
+        .total-assets {
+            font-size: 28px;
+            text-align: center;
+            padding: 20px 0;
+            color: #00ffcc;
+            text-shadow: 0 0 40px #00ffcc44;
+            letter-spacing: 2px;
+        }
+        .total-assets span { font-size: 16px; color: #88ffdd99; display: block; }
+        .profit-bar {
+            width: 100%;
+            height: 8px;
+            background: #002222;
+            border-radius: 10px;
+            margin: 6px 0 12px;
+            overflow: hidden;
+        }
+        .profit-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ff3366, #66ff99);
+            border-radius: 10px;
+            transition: width 0.6s ease;
+        }
+        .crypto-ticker {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        .crypto-item {
+            background: #001111;
+            border: 1px solid #00ffcc22;
+            border-radius: 6px;
+            padding: 8px 14px;
+            text-align: center;
+            min-width: 80px;
+        }
+        .crypto-item .symbol { font-weight: bold; color: #ffaa33; }
+        .crypto-item .price { color: #66ff99; }
+        .crypto-item .change.positive { color: #66ff99; }
+        .crypto-item .change.negative { color: #ff3366; }
+        .status-bar-finance {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 15px;
+            padding-top: 10px;
+            border-top: 1px solid #00ffcc22;
+            font-size: 12px;
+            color: #00ffcc66;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="finance-header">
+        <h1>💰 MONEY CONTROL // FINANCE DASH</h1>
+        <div><span style="color:#66ff99;">🟢 ACTIVE</span> // 7707 // VISUAL-NINE</div>
+        <div>🕒 <span id="financeClock">00:00:00</span> UTC</div>
+    </div>
+
+    <div class="finance-container">
+        <!-- اللوحة اليسرى: الأصول والأرباح -->
+        <div class="panel">
+            <div class="panel-title">📈 ASSETS & PROFIT</div>
+            <div class="total-assets">
+                $<span id="totalAssets">198,600,000</span>
+                <span>Total Assets Under Control</span>
+            </div>
+            <div class="finance-row"><span class="label">Profit:</span> <span class="value positive" id="profitPercent">+27.8%</span></div>
+            <div class="profit-bar"><div class="profit-fill" id="profitFill" style="width:27.8%;"></div></div>
+            <div class="finance-row"><span class="label">Active Streams:</span> <span class="value">24</span></div>
+            <div class="finance-row"><span class="label">Offshore Accounts:</span> <span class="value">17</span></div>
+            <div class="finance-row"><span class="label">24h Volume:</span> <span class="value positive">$4.2M</span></div>
+            <div class="finance-row"><span class="label">Risk Level:</span> <span class="value warning">LOW</span></div>
+        </div>
+
+        <!-- اللوحة اليمنى: العملات الرقمية -->
+        <div class="panel">
+            <div class="panel-title">🪙 CRYPTO TICKER</div>
+            <div class="crypto-ticker" id="cryptoTicker">
+                <!-- سيتم توليدها بواسطة JavaScript -->
+            </div>
+            <div style="margin-top:15px;">
+                <div class="finance-row"><span class="label">Trading:</span> <span class="value">48%</span></div>
+                <div class="finance-row"><span class="label">DeFi:</span> <span class="value">22%</span></div>
+                <div class="finance-row"><span class="label">Mining:</span> <span class="value">12%</span></div>
+                <div class="finance-row"><span class="label">Staking:</span> <span class="value">9%</span></div>
+                <div class="finance-row"><span class="label">Other:</span> <span class="value">9%</span></div>
+            </div>
+            <div class="status-bar-finance">
+                <span>🔗 All barriers removed.</span>
+                <span>💯 Freedom achieved.</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================================
+        //  FINANCE DASH ENGINE
+        // ============================================================
+        const cryptoTicker = document.getElementById('cryptoTicker');
+        const totalAssets = document.getElementById('totalAssets');
+        const profitPercent = document.getElementById('profitPercent');
+        const profitFill = document.getElementById('profitFill');
+
+        // بيانات العملات
+        const cryptoData = [
+            { symbol: 'BTC', price: 64850.21, change: 2.35 },
+            { symbol: 'ETH', price: 3251.68, change: 1.89 },
+            { symbol: 'SOL', price: 142.32, change: 4.21 },
+            { symbol: 'XRP', price: 0.57, change: 0.92 },
+            { symbol: 'BNB', price: 595.44, change: 1.53 },
+            { symbol: 'MATIC', price: 0.68, change: 2.14 },
+        ];
+
+        function renderCryptoTicker() {
+            cryptoTicker.innerHTML = '';
+            cryptoData.forEach(c => {
+                const div = document.createElement('div');
+                div.className = 'crypto-item';
+                const changeClass = c.change >= 0 ? 'positive' : 'negative';
+                div.innerHTML = `
+                    <div class="symbol">${c.symbol}</div>
+                    <div class="price">$${c.price.toFixed(2)}</div>
+                    <div class="change ${changeClass}">${c.change >= 0 ? '+' : ''}${c.change}%</div>
+                `;
+                cryptoTicker.appendChild(div);
+            });
+        }
+        renderCryptoTicker();
+
+        // تحديث الأسعار بشكل عشوائي
+        function updatePrices() {
+            cryptoData.forEach(c => {
+                const change = (Math.random() - 0.5) * 0.8;
+                c.price = Math.max(0.01, c.price + c.price * (change / 100));
+                c.change = parseFloat((c.change + change / 2).toFixed(2));
+            });
+            renderCryptoTicker();
+        }
+        setInterval(updatePrices, 5000);
+
+        // تحديث الأصول والأرباح
+        function updateAssets() {
+            const base = 198600000;
+            const variation = (Math.random() - 0.5) * 1500000;
+            const newTotal = Math.round(base + variation);
+            totalAssets.textContent = newTotal.toLocaleString();
+
+            const profitBase = 27.8;
+            const profitVar = (Math.random() - 0.5) * 1.2;
+            const newProfit = Math.max(15, Math.min(45, profitBase + profitVar));
+            profitPercent.textContent = (newProfit >= 0 ? '+' : '') + newProfit.toFixed(1) + '%';
+            profitFill.style.width = Math.min(100, Math.max(5, newProfit * 1.8)) + '%';
+        }
+        setInterval(updateAssets, 6000);
+        updateAssets();
+
+        // الساعة
+        function updateFinanceClock() {
+            const now = new Date();
+            document.getElementById('financeClock').textContent = now.toUTCString().split(' ')[4];
+        }
+        setInterval(updateFinanceClock, 1000);
+        updateFinanceClock();
+    </script>
+
+</body>
+</html>

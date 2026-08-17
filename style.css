@@ -1,0 +1,491 @@
+/* ================================================================
+   RESET & BASE
+   ================================================================ */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+@font-face {
+    font-family: 'CryptoMono';
+    src: local('Courier New'), local('monospace');
+    font-weight: 400;
+}
+
+:root {
+    --neon-green: #00ffcc;
+    --neon-red: #ff3366;
+    --dark-bg: #0a0a0a;
+    --panel-bg: #0d1a1a;
+    --glow-green: 0 0 20px #00ffcc44, 0 0 60px #00ffcc22;
+    --glow-red: 0 0 20px #ff336644, 0 0 60px #ff336622;
+}
+
+html, body {
+    width: 100%;
+    min-height: 100vh;
+    background: var(--dark-bg);
+    color: var(--neon-green);
+    font-family: 'Share Tech Mono', 'Courier New', monospace;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+}
+
+body {
+    background: radial-gradient(ellipse at 20% 30%, #0f1f1a 0%, #000000 100%);
+    position: relative;
+}
+
+/* ================================================================
+   PARTICLES (خلفية الجسيمات)
+   ================================================================ */
+#particles-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+.particle {
+    position: absolute;
+    width: 3px;
+    height: 3px;
+    background: var(--neon-green);
+    border-radius: 50%;
+    opacity: 0.3;
+    animation: floatParticle linear infinite;
+    box-shadow: 0 0 6px var(--neon-green);
+}
+@keyframes floatParticle {
+    0% { transform: translateY(100vh) scale(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+}
+
+/* ================================================================
+   BOOT SCREEN (شاشة الدخول)
+   ================================================================ */
+#boot-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 1.2s ease;
+}
+#boot-screen.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+.boot-text {
+    font-size: 1.4rem;
+    line-height: 2.2;
+    color: #88ffdd;
+    text-align: center;
+    padding: 30px;
+    border: 1px solid #00ffcc33;
+    background: #000000aa;
+    max-width: 90%;
+    text-shadow: 0 0 20px #00ffcc22;
+}
+.boot-text .glitch-text {
+    color: var(--neon-red);
+    font-size: 2em;
+    letter-spacing: 8px;
+    animation: glitch 0.5s infinite;
+}
+.enter-button {
+    margin-top: 40px;
+    padding: 18px 60px;
+    font-size: 1.6rem;
+    font-family: 'Orbitron', monospace;
+    background: transparent;
+    color: var(--neon-green);
+    border: 2px solid var(--neon-green);
+    cursor: pointer;
+    letter-spacing: 4px;
+    transition: 0.4s;
+    text-transform: uppercase;
+    box-shadow: 0 0 30px #00ffcc33;
+}
+.enter-button:hover {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 60px #00ffcc, 0 0 120px #00ffcc44;
+}
+
+/* ================================================================
+   STATUS BAR
+   ================================================================ */
+.status-bar {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #00ffcc33;
+    background: #00000088;
+    backdrop-filter: blur(6px);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    font-size: 0.9rem;
+    gap: 10px;
+}
+.status-left, .status-center, .status-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    flex-wrap: wrap;
+}
+.status-dot {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    animation: blink 1s infinite;
+}
+.status-dot.red { background: var(--neon-red); box-shadow: 0 0 20px var(--neon-red); }
+.status-item {
+    background: #00ffcc11;
+    padding: 4px 12px;
+    border: 1px solid #00ffcc33;
+    border-radius: 4px;
+    white-space: nowrap;
+}
+
+/* ================================================================
+   7707 SECTION
+   ================================================================ */
+.section-7707 {
+    text-align: center;
+    padding: 20px 0 10px;
+    position: relative;
+}
+.big-7707 {
+    font-size: 120px;
+    font-weight: 900;
+    font-family: 'Orbitron', monospace;
+    color: #00ffcc11;
+    text-shadow: 0 0 60px #00ffcc, 0 0 120px #00ffcc66, 0 0 200px #00ffcc33;
+    letter-spacing: 30px;
+    animation: pulseGlow 4s infinite alternate;
+    line-height: 1;
+}
+@keyframes pulseGlow {
+    0% { opacity: 0.4; text-shadow: 0 0 40px #00ffcc22; }
+    100% { opacity: 1; text-shadow: 0 0 80px #00ffcc, 0 0 160px #00ffcc88, 0 0 300px #00ffcc44; }
+}
+.sub-7707 {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 10px;
+    font-size: 1.2rem;
+    color: #00ffcc55;
+}
+.sub-7707 span {
+    background: #00ffcc08;
+    padding: 0 10px;
+    border: 1px solid #00ffcc22;
+    border-radius: 4px;
+    animation: glitch 3s infinite;
+}
+
+/* ================================================================
+   GRID MASHUP (الشبكة المختلطة)
+   ================================================================ */
+.grid-mashup {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.grid-card {
+    background: #00000077;
+    border: 1px solid #00ffcc33;
+    padding: 16px 12px;
+    font-size: 0.8rem;
+    line-height: 1.8;
+    border-radius: 6px;
+    backdrop-filter: blur(4px);
+    transition: 0.3s;
+    box-shadow: 0 0 20px #00ffcc08;
+}
+.grid-card:hover {
+    border-color: var(--neon-green);
+    box-shadow: 0 0 40px #00ffcc22;
+    transform: scale(1.02);
+}
+.grid-card .highlight { color: var(--neon-red); font-weight: bold; }
+.grid-card .error { color: var(--neon-red); }
+.grid-card .active { color: #66ff99; }
+
+/* ================================================================
+   BREACH LOG (سجل الاختراق)
+   ================================================================ */
+.breach-container {
+    max-width: 1200px;
+    margin: 10px auto;
+    padding: 0 20px;
+}
+.breach-header {
+    display: flex;
+    justify-content: space-between;
+    background: #000000aa;
+    padding: 8px 16px;
+    border: 1px solid #00ffcc44;
+    border-bottom: none;
+    font-size: 0.8rem;
+    color: #88ffdd;
+}
+.breach-log {
+    background: #000000cc;
+    border: 1px solid #00ffcc44;
+    padding: 16px;
+    max-height: 250px;
+    overflow-y: auto;
+    font-size: 0.85rem;
+    line-height: 1.9;
+    color: #88ffdd;
+    box-shadow: inset 0 0 60px #00ffcc08;
+    scroll-behavior: smooth;
+}
+.breach-log .cmd { color: #ffaa33; }
+.breach-log .success { color: #66ff99; }
+.breach-log .error { color: var(--neon-red); }
+.breach-log .highlight { color: #ffaa33; }
+.breach-log .blink { animation: blink 0.8s infinite; }
+.breach-log::-webkit-scrollbar {
+    width: 6px;
+    background: #000;
+}
+.breach-log::-webkit-scrollbar-thumb {
+    background: #00ffcc44;
+    border-radius: 10px;
+}
+
+/* ================================================================
+   FINANCE & ENERGY PANEL (لوحة المال والطاقة)
+   ================================================================ */
+.finance-energy-panel {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
+}
+@media (max-width: 700px) {
+    .finance-energy-panel { grid-template-columns: 1fr; }
+}
+.finance-box, .energy-box {
+    background: #000000aa;
+    border: 1px solid #00ffcc33;
+    padding: 20px;
+    border-radius: 8px;
+    backdrop-filter: blur(4px);
+}
+.panel-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(--neon-green);
+    border-bottom: 1px solid #00ffcc33;
+    padding-bottom: 10px;
+    margin-bottom: 14px;
+    text-align: center;
+    letter-spacing: 3px;
+}
+.finance-row, .energy-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 4px 0;
+    font-size: 0.85rem;
+    border-bottom: 1px solid #00ffcc11;
+}
+.energy-bar {
+    width: 100%;
+    height: 10px;
+    background: #002222;
+    border-radius: 10px;
+    margin: 6px 0 12px;
+    overflow: hidden;
+}
+.energy-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--neon-red), #ffaa00, var(--neon-green));
+    border-radius: 10px;
+    transition: width 0.5s ease;
+}
+
+/* ================================================================
+   MEGA MASHUP (شريط المزج النهائي)
+   ================================================================ */
+.mega-mashup {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    padding: 16px 20px;
+    max-width: 1200px;
+    margin: 10px auto;
+    border-top: 1px solid #00ffcc22;
+    border-bottom: 1px solid #00ffcc22;
+}
+.mega-mashup span {
+    background: #00ffcc08;
+    padding: 4px 12px;
+    border: 1px solid #00ffcc22;
+    border-radius: 20px;
+    font-size: 0.7rem;
+    color: #88ffdd99;
+    transition: 0.3s;
+    animation: glitch 5s infinite;
+}
+.mega-mashup span:hover {
+    color: var(--neon-green);
+    border-color: var(--neon-green);
+    box-shadow: 0 0 20px #00ffcc33;
+}
+
+/* ================================================================
+   AUDIO CONTROLS (التحكم بالصوت)
+   ================================================================ */
+.audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    gap: 24px;
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.crypto-button {
+    padding: 14px 36px;
+    font-size: 1.1rem;
+    font-family: 'Orbitron', monospace;
+    background: transparent;
+    color: var(--neon-green);
+    border: 2px solid var(--neon-green);
+    cursor: pointer;
+    border-radius: 40px;
+    transition: 0.4s;
+    letter-spacing: 2px;
+    box-shadow: 0 0 30px #00ffcc22;
+}
+.crypto-button.active {
+    background: var(--neon-green);
+    color: #000;
+    box-shadow: 0 0 60px #00ffcc, 0 0 120px #00ffcc66;
+}
+.crypto-button:hover {
+    transform: scale(1.05);
+}
+.audio-visualizer {
+    display: flex;
+    gap: 4px;
+    height: 40px;
+    align-items: flex-end;
+}
+.audio-visualizer span {
+    display: block;
+    width: 6px;
+    background: var(--neon-green);
+    border-radius: 4px;
+    transition: height 0.1s ease;
+    height: 8px;
+    opacity: 0.3;
+}
+.audio-visualizer.active span {
+    animation: vizBounce 0.15s infinite alternate;
+}
+@keyframes vizBounce {
+    0% { height: 8px; opacity: 0.3; }
+    100% { height: 40px; opacity: 1; }
+}
+.crypto-key-display {
+    font-size: 0.8rem;
+    color: #88ffdd99;
+    text-align: center;
+    line-height: 2;
+}
+.crypto-key-display span { display: block; }
+
+/* ================================================================
+   FOOTER BRAND
+   ================================================================ */
+.footer-brand {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    padding: 30px 20px;
+    border-top: 1px solid #00ffcc22;
+    margin-top: 20px;
+}
+.fire-symbol {
+    font-size: 2.4rem;
+    animation: pulseGlow 2s infinite alternate;
+}
+.brand-text {
+    font-family: 'Orbitron', monospace;
+    letter-spacing: 6px;
+    font-size: 1.2rem;
+    color: #00ffcc66;
+}
+
+/* ================================================================
+   ANIMATIONS GENERAL
+   ================================================================ */
+@keyframes glitch {
+    0%, 100% { transform: translate(0); opacity: 1; }
+    20% { transform: translate(-2px, 1px); opacity: 0.8; }
+    40% { transform: translate(2px, -1px); opacity: 1; }
+    60% { transform: translate(-1px, 2px); opacity: 0.6; }
+    80% { transform: translate(1px, -2px); opacity: 1; }
+}
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0; }
+}
+
+/* ================================================================
+   SCROLLBAR GLOBAL
+   ================================================================ */
+::-webkit-scrollbar {
+    width: 8px;
+    background: #000;
+}
+::-webkit-scrollbar-thumb {
+    background: #00ffcc44;
+    border-radius: 10px;
+}
+::-webkit-scrollbar-track {
+    background: #00000044;
+}
+
+/* ================================================================
+   RESPONSIVE TWEAKS
+   ================================================================ */
+@media (max-width: 600px) {
+    .big-7707 { font-size: 70px; letter-spacing: 14px; }
+    .boot-text { font-size: 1rem; }
+    .enter-button { padding: 14px 30px; font-size: 1.2rem; }
+    .status-bar { font-size: 0.7rem; }
+    .grid-mashup { grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); }
+}
